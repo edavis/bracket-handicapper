@@ -1,0 +1,6 @@
+Bracket Handicapper
+-------------------
+
+Given an office's bracket pool and FiveThirtyEight's NCAAM team
+ratings, run a Monte Carlo simulation to guage how often each office
+pool player will win.
