@@ -47,14 +47,12 @@ class Game():
         top_rtg = float(self.top_team.stats['team_rating'])
         bot_rtg = float(self.bottom_team.stats['team_rating'])
 
-        #print(f'{self.top_team} = {top_win}, {self.bottom_team} = {bot_win} (round = {self.round_number})')
-
         if top_win == 0.0:
-            print(f'{self.top_team} lost in round {self.round_number}, making {self.bottom_team} the winner')
+            #print(f'{self.top_team} lost in round {self.round_number}, making {self.bottom_team} the winner')
             self.winner = self.bottom_team
             return self.bottom_team
         elif bot_win == 0.0:
-            print(f'{self.bottom_team} lost in round {self.round_number}, making {self.top_team} the winner')
+            #print(f'{self.bottom_team} lost in round {self.round_number}, making {self.top_team} the winner')
             self.winner = self.top_team
             return self.top_team
         else:
@@ -64,7 +62,7 @@ class Game():
             p = 1.0 / (1.0 + 10**d)
             r = random.random()
             choice = self.top_team if r < p else self.bottom_team
-            print(f'Giving {self.top_team} a {p} chance of beating {self.bottom_team}. With a roll of {r}, picking {choice}.')
+            #print(f'Giving {self.top_team} a {p} chance of beating {self.bottom_team}. With a roll of {r}, picking {choice}.')
             self.winner = choice
             return choice
 
@@ -74,7 +72,6 @@ class Game():
 class Region():
     def __init__(self, name, teams):
         assert len(teams) == 16, 'wrong number of teams'
-        print(f'{name} Region\n' + '-' * 79)
 
         self.Name = name
         self.Teams = teams
@@ -127,8 +124,6 @@ class Region():
 
 class FinalFour():
     def __init__(self, west, east, south, midwest):
-        print(f'Final Four and Championship\n' + '-' * 79)
-
         # the winners out of each region
         self.west = west
         self.east = east
@@ -180,8 +175,6 @@ def run_simulation():
         region_teams = [team for seed, team in sorted(teams[region_name].items())]
         regions[region_name] = Region(region_name, region_teams)
         regions[region_name].Simulate()
-        print(regions[region_name])
-        print()
 
     ff = FinalFour(
         regions['West'].Winner,
@@ -190,15 +183,11 @@ def run_simulation():
         regions['Midwest'].Winner,
     )
     ff.Simulate()
-    print(ff)
-    print()
 
     # ---------------------------------------------------------------------------
 
-    print('Comparing to brackets.csv...')
     reader = csv.DictReader(open('brackets.csv'))
     points = defaultdict(int)
-    #points = {'Eric': 0, 'Mike': 0}
 
     for row in reader:
         region_name = row.pop('Region')
@@ -212,19 +201,34 @@ def run_simulation():
 
         for player in row.keys():
             game_points = int(row[player] == game.winner.name) * game.Points()
-            print(f"[{region_name} {game_label}] {player}'s Pick: {row[player]}, Outcome: {game.winner}, Points: {game_points}")
+            #print(f"[{region_name} {game_label}] {player}'s Pick: {row[player]}, Outcome: {game.winner}, Points: {game_points}")
             points[player] += game_points
 
-    print(f'Simulation Finished: {points}')
+    #print(f'Simulation Finished: {points}')
     return points
 
 if __name__ == '__main__':
     winners = Counter()
-    iterations = 1_000
+    iterations = 10_000
+    #iterations = 10
 
-    for _ in range(iterations):
+    for iteration in range(iterations):
         simulation = run_simulation()
-        (winner, win_points) = max(simulation.items(), key=itemgetter(1))
-        winners.update([winner])
+        top_score = max(simulation.values())
+        print(f'Top score = {top_score}')
+
+        sim_winners = []
+        for player, score in simulation.items():
+            print(f'{player} scored {score}')
+            if score == top_score:
+                sim_winners.append(player)
+
+        winners.update([random.choice(sim_winners)])
+        print(winners)
+        print()
 
     print(f'Winners: {winners}')
+    for key in sorted(winners, key=winners.get, reverse=True):
+        p = winners[key] / iterations
+        odds = round((1/p)-1)
+        print(f'{key.rjust(7)}: {int(odds)} - 1 ({round(p*100, 1)}%)')
