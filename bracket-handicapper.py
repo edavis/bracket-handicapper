@@ -229,6 +229,7 @@ if __name__ == '__main__':
     row.pop('Game')
     winners.update({player: 0 for player in row.keys()})
 
+    if not DEBUG: print('Iteration:', end=' ', flush=True)
     for iteration in range(iterations):
         simulation = run_simulation()
         top_score = max(simulation.values())
@@ -248,7 +249,8 @@ if __name__ == '__main__':
         info(f'Running Winners = {winners}')
         info()
 
-        if not DEBUG and iteration % 500 == 0: print(f'Iteration: {iteration}')
+        if not DEBUG and iteration % 500 == 0: print(f'{iteration}', end=' ', flush=True)
+    if not DEBUG: print()
 
     info(f'Final Winners = {winners}')
     for key in sorted(winners, key=winners.get, reverse=True):
