@@ -204,10 +204,7 @@ def run_simulation():
 
     for row in reader:
         region_name = row.pop('Region')
-        if region_name in ['Final Four', 'Champion']:
-            region = ff
-        else:
-            region = regions[region_name]
+        region = ff if region_name in ['Final Four', 'Champion'] else regions[region_name]
 
         game_label = row.pop('Game')
         game = getattr(region, game_label)
