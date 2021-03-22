@@ -250,5 +250,8 @@ if __name__ == '__main__':
     info(f'Final Winners = {winners}')
     for key in sorted(winners, key=winners.get, reverse=True):
         p = winners[key] / iterations
-        odds = round((1/p)-1)
-        print(f'{key.rjust(7)}: {int(odds)} - 1 ({round(p*100, 1)}%)')
+        if p < 0.0001:
+            print(f'{key.rjust(7)}: < 0.01%')
+        else:
+            odds = round((1/p)-1)
+            print(f'{key.rjust(7)}: {odds} - 1 ({round(p*100, 2)}%)')
