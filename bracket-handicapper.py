@@ -249,7 +249,7 @@ if __name__ == '__main__':
         info(f'Running Winners = {winners}')
         info()
 
-        if not DEBUG and iteration % 500 == 0: print(f'{iteration}', end=' ', flush=True)
+        if not DEBUG and (iteration + 1) % 500 == 0: print(f'{iteration + 1}', end=' ', flush=True)
     if not DEBUG: print()
 
     info(f'Final Winners = {winners}')
