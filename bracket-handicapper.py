@@ -120,9 +120,8 @@ class Region():
         self.Winner = self.Game15.Winner()
 
     def __repr__(self):
-        #region_header = f'{self.Name} Region\n--------------------\n'
-        round1_str = 'Round 1: ' + ', '.join([str(game) for game in self.Round1])
-        round2_str = '\nRound 2: ' + ', '.join([str(game) for game in self.Round2])
+        round1_str = 'Round of 64: ' + ', '.join([str(game) for game in self.Round1])
+        round2_str = '\nRound of 32: ' + ', '.join([str(game) for game in self.Round2])
         round3_str = '\nSweet 16: ' + ', '.join([str(game) for game in self.Round3])
         round4_str = '\nElite 8: ' + ', '.join([str(game) for game in self.Round4])
         winner_str = '\nFinal 4: ' + str(self.Winner)
