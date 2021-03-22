@@ -9,6 +9,12 @@ from collections import (
     defaultdict, Counter
 )
 
+LATEST_RESULTS = '2021-03-21'
+
+DEBUG = False
+def info(s=''):
+    if DEBUG: print(s)
+
 class Team():
     def __init__(self, name, seed, stats):
         self.name = name
@@ -48,11 +54,11 @@ class Game():
         bot_rtg = float(self.bottom_team.stats['team_rating'])
 
         if top_win == 0.0:
-            #print(f'{self.top_team} lost in round {self.round_number}, making {self.bottom_team} the winner')
+            info(f'{self.top_team} lost in round {self.round_number}, making {self.bottom_team} the winner')
             self.winner = self.bottom_team
             return self.bottom_team
         elif bot_win == 0.0:
-            #print(f'{self.bottom_team} lost in round {self.round_number}, making {self.top_team} the winner')
+            info(f'{self.bottom_team} lost in round {self.round_number}, making {self.top_team} the winner')
             self.winner = self.top_team
             return self.top_team
         else:
@@ -62,7 +68,7 @@ class Game():
             p = 1.0 / (1.0 + 10**d)
             r = random.random()
             choice = self.top_team if r < p else self.bottom_team
-            #print(f'Giving {self.top_team} a {p} chance of beating {self.bottom_team}. With a roll of {r}, picking {choice}.')
+            info(f'Giving {self.top_team} a {p} chance of beating {self.bottom_team}. With a roll of {r}, picking {choice}.')
             self.winner = choice
             return choice
 
@@ -162,7 +168,7 @@ def run_simulation():
     regions = {}
 
     for row in reader:
-        if row['gender'] != 'mens' or row['forecast_date'] != '2021-03-20': continue # only use the latest mens
+        if row['gender'] != 'mens' or row['forecast_date'] != LATEST_RESULTS: continue # only use the latest mens
         if row['playin_flag'] == '1' and row['rd1_win'] == '0.0': continue # team out before Friday
 
         region = row['team_region']
@@ -171,11 +177,17 @@ def run_simulation():
         teams[region][seed] = Team(team, seed, row)
 
     for region_name in teams.keys():
+        assert len(teams[region_name]) == 16, 'invalid number of teams in region'
         region_teams = sorted(teams[region_name].items())
         region_teams = [team for seed, team in sorted(teams[region_name].items())]
+
+        info(f'{region_name} Region\n' + '-' * 50)
         regions[region_name] = Region(region_name, region_teams)
         regions[region_name].Simulate()
+        info(regions[region_name])
+        info()
 
+    info('Final Four\n' + '-' * 50)
     ff = FinalFour(
         regions['West'].Winner,
         regions['East'].Winner,
@@ -183,6 +195,8 @@ def run_simulation():
         regions['Midwest'].Winner,
     )
     ff.Simulate()
+    info(ff)
+    info()
 
     # ---------------------------------------------------------------------------
 
@@ -201,10 +215,10 @@ def run_simulation():
 
         for player in row.keys():
             game_points = int(row[player] == game.winner.name) * game.Points()
-            #print(f"[{region_name} {game_label}] {player}'s Pick: {row[player]}, Outcome: {game.winner}, Points: {game_points}")
+            info(f"[{region_name} {game_label}] {player}'s Pick: {row[player]}, Outcome: {game.winner}, Points: {game_points}")
             points[player] += game_points
 
-    #print(f'Simulation Finished: {points}')
+    info(f'Simulation Finished = {points}')
     return points
 
 if __name__ == '__main__':
@@ -215,19 +229,25 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         simulation = run_simulation()
         top_score = max(simulation.values())
-        print(f'Top score = {top_score}')
+        info(f'Top score = {top_score}')
 
         sim_winners = []
         for player, score in simulation.items():
-            print(f'{player} scored {score}')
             if score == top_score:
                 sim_winners.append(player)
 
-        winners.update([random.choice(sim_winners)])
-        print(winners)
-        print()
+        info(f'Simulation Winners = {sim_winners}')
 
-    print(f'Winners: {winners}')
+        chosen = [random.choice(sim_winners)]
+        info(f'Chosen Winner = {chosen}')
+
+        winners.update(chosen)
+        info(f'Running Winners = {winners}')
+        info()
+
+        if not DEBUG and iteration % 500 == 0: print(f'Iteration: {iteration}')
+
+    info(f'Final Winners = {winners}')
     for key in sorted(winners, key=winners.get, reverse=True):
         p = winners[key] / iterations
         odds = round((1/p)-1)
