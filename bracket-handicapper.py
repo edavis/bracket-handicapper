@@ -226,6 +226,13 @@ if __name__ == '__main__':
     iterations = 10_000
     #iterations = 10
 
+    # Make sure everybody is displayed
+    reader = csv.DictReader(open('brackets.csv'))
+    row = next(reader)
+    row.pop('Region')
+    row.pop('Game')
+    winners.update({player: 0 for player in row.keys()})
+
     for iteration in range(iterations):
         simulation = run_simulation()
         top_score = max(simulation.values())
