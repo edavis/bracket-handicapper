@@ -9,7 +9,7 @@ from collections import (
     defaultdict, Counter
 )
 
-LATEST_RESULTS = '2021-03-21'
+LATEST_RESULTS = '2021-03-22'
 
 DEBUG = False
 def info(s=''):
