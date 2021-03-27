@@ -157,31 +157,11 @@ class FinalFour():
         winner_str = '\nChampion: ' + str(self.Winner)
         return f'{round1_str}{round2_str}{winner_str}'
 
-def run_simulation():
-    # Downloaded from <https://projects.fivethirtyeight.com/march-madness-api/2021/fivethirtyeight_ncaa_forecasts.csv>
-    reader = csv.DictReader(open('fivethirtyeight_ncaa_forecasts.csv'))
-    teams = {
-        'West': {},
-        'East': {},
-        'South': {},
-        'Midwest': {},
-    }
+def run_simulation(teams):
     regions = {}
-
-    for row in reader:
-        if row['gender'] != 'mens' or row['forecast_date'] != LATEST_RESULTS: continue # only use the latest mens
-        if row['playin_flag'] == '1' and row['rd1_win'] == '0.0': continue # team out before Friday
-
-        region = row['team_region']
-        seed = int(row['team_seed'].rstrip('ab'))
-        team = row['team_name']
-        teams[region][seed] = Team(team, seed, row)
-
     for region_name in teams.keys():
         assert len(teams[region_name]) == 16, 'invalid number of teams in region'
-        region_teams = sorted(teams[region_name].items())
         region_teams = [team for seed, team in sorted(teams[region_name].items())]
-
         info(f'{region_name} Region\n' + '-' * 50)
         regions[region_name] = Region(region_name, region_teams)
         regions[region_name].Simulate()
@@ -231,9 +211,29 @@ if __name__ == '__main__':
     row.pop('Game')
     winners.update({player: 0 for player in row.keys()})
 
+    # ---------------------------------------------------------------------------
+    # Downloaded from <https://projects.fivethirtyeight.com/march-madness-api/2021/fivethirtyeight_ncaa_forecasts.csv>
+    reader = csv.DictReader(open('fivethirtyeight_ncaa_forecasts.csv'))
+    teams = {
+        'West': {},
+        'East': {},
+        'South': {},
+        'Midwest': {},
+    }
+
+    for row in reader:
+        if row['gender'] != 'mens' or row['forecast_date'] != LATEST_RESULTS: continue # only use the latest mens
+        if row['playin_flag'] == '1' and row['rd1_win'] == '0.0': continue # team out before Friday
+
+        region = row['team_region']
+        seed = int(row['team_seed'].rstrip('ab'))
+        team = row['team_name']
+        teams[region][seed] = Team(team, seed, row)
+    # ---------------------------------------------------------------------------
+
     if not DEBUG: print('Iteration:', end=' ', flush=True)
     for iteration in range(iterations):
-        simulation = run_simulation()
+        simulation = run_simulation(teams)
         top_score = max(simulation.values())
         info(f'Top score = {top_score}')
 
