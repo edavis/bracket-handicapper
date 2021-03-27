@@ -254,7 +254,7 @@ if __name__ == '__main__':
         if not DEBUG and (iteration + 1) % 500 == 0: print(f'{iteration + 1}', end=' ', flush=True)
     if not DEBUG: print()
 
-    info(f'Final Winners = {winners}')
+    if not DEBUG: print(f'Final Winners = {winners}')
     for key in sorted(winners, key=winners.get, reverse=True):
         p = winners[key] / iterations
         if p < 0.0001:
