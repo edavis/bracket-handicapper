@@ -9,6 +9,8 @@ from collections import (
     defaultdict, Counter
 )
 
+random.seed(2020-21)
+
 LATEST_RESULTS = '2021-03-22'
 
 DEBUG = False
