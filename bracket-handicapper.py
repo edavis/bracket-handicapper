@@ -22,8 +22,6 @@ random.seed(2020-21)
 # 3/29 -> D1 E8 finished
 # 3/30 -> D2 E8 finished
 
-LATEST_RESULTS = '2021-03-27'
-
 def info(s=''):
     if DEBUG: print(s)
 
@@ -214,9 +212,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true')
     parser.add_argument('-n', '--iterations', default=10_000, type=int)
+    parser.add_argument('latest')
     args = parser.parse_args()
 
     DEBUG = args.debug
+    LATEST_RESULTS = args.latest
     iterations = args.iterations
     finishes = {}
 
