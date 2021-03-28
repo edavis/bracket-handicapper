@@ -207,8 +207,6 @@ if __name__ == '__main__':
 
     DEBUG = args.debug
     iterations = args.iterations
-
-    winners = Counter()
     finishes = {}
 
     # Make sure everybody is displayed
@@ -216,7 +214,6 @@ if __name__ == '__main__':
     row = next(reader)
     row.pop('Region')
     row.pop('Game')
-    winners.update({player: 0 for player in row.keys()})
     finishes.update({player: Counter() for player in row.keys()})
 
     # ---------------------------------------------------------------------------
@@ -264,13 +261,6 @@ if __name__ == '__main__':
                 finishes[player].update([ordinal])
 
         info(f'Simulation Winners = {sim_winners}')
-
-        chosen = [random.choice(sim_winners)]
-        info(f'Chosen Winner = {chosen}')
-
-        winners.update(chosen)
-        info(f'Running Winners = {winners}')
-        info()
 
         if (iteration + 1) % 500 == 0: print('.', end='', flush=True)
 
