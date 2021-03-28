@@ -237,7 +237,6 @@ if __name__ == '__main__':
         teams[region][seed] = Team(team, seed, row)
     # ---------------------------------------------------------------------------
 
-    if not DEBUG: print('Iteration:', end=' ', flush=True)
     for iteration in range(iterations):
         simulation = run_simulation(teams)
         top_score = max(simulation.values())
@@ -257,10 +256,11 @@ if __name__ == '__main__':
         info(f'Running Winners = {winners}')
         info()
 
-        if not DEBUG and (iteration + 1) % 500 == 0: print(f'{iteration + 1}', end=' ', flush=True)
-    if not DEBUG: print()
+        if (iteration + 1) % 500 == 0: print('.', end='', flush=True)
 
-    if not DEBUG: print(f'Final Winners = {winners}')
+    print()
+
+    print(f'Final Winners = {winners}')
     for key in sorted(winners, key=winners.get, reverse=True):
         p = winners[key] / iterations
         if p < 0.0001:
