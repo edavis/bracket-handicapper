@@ -13,7 +13,6 @@ random.seed(2020-21)
 
 LATEST_RESULTS = '2021-03-22'
 
-DEBUG = False
 def info(s=''):
     if DEBUG: print(s)
 
@@ -200,9 +199,16 @@ def run_simulation(teams):
     return points
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--debug', action='store_true')
+    parser.add_argument('-n', '--iterations', default=10_000, type=int)
+    args = parser.parse_args()
+
+    DEBUG = args.debug
+    iterations = args.iterations
+
     winners = Counter()
-    iterations = 10_000
-    #iterations = 10
 
     # Make sure everybody is displayed
     reader = csv.DictReader(open('brackets.csv'))
