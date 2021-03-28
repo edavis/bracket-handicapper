@@ -231,34 +231,11 @@ if __name__ == '__main__':
         teams[region][seed] = Team(team, seed, row)
     # ---------------------------------------------------------------------------
 
-    # Sanity Check
-    max_pts = [
-        ('Steve', 52),
-        ('Matt', 147),
-        ('Dawn', 154),
-        ('Rajeev', 125),
-        ('John', 144),
-        ('Mike', 120),
-        ('Max', 135),
-        ('Kyle', 74),
-        ('Adam', 112),
-        ('Daniel', 111),
-        ('Doug', 75),
-        ('Peter', 106),
-        ('Eric', 49),
-        ('Brian', 112),
-        ('Dusty', 37),
-        ('Mark', 64),
-    ]
-
     if not DEBUG: print('Iteration:', end=' ', flush=True)
     for iteration in range(iterations):
         simulation = run_simulation(teams)
         top_score = max(simulation.values())
         info(f'Top score = {top_score}')
-
-        for player, score in max_pts:
-            assert simulation[player] <= score, f'{player} exceeded max points'
 
         sim_winners = []
         for player, score in simulation.items():
