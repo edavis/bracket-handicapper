@@ -190,7 +190,9 @@ def run_simulation(teams):
     # ---------------------------------------------------------------------------
 
     reader = csv.DictReader(open('brackets.csv'))
-    points = defaultdict(int)
+
+    # Add a bit of jitter between [0, 1) to break ties
+    points = defaultdict(random.random)
 
     for row in reader:
         region_name = row.pop('Region')
@@ -249,29 +251,11 @@ if __name__ == '__main__':
 
     for iteration in range(iterations):
         simulation = run_simulation(teams)
-        top_score = max(simulation.values())
-        info(f'Top score = {top_score}')
+        rank = [player for player, score in sorted(simulation.items(), key=itemgetter(1), reverse=True)]
 
-        sim_order = [player for player, score in sorted(simulation.items(), key=itemgetter(1), reverse=True)]
-        sim_winners = []
         for player, score in simulation.items():
-            if score == top_score:
-                sim_winners.append(player)
-
-        if len(sim_winners) == 1:
-            for player, score in simulation.items():
-                ordinal = sim_order.index(player) + 1
-                finishes[player].update([ordinal])
-        else:
-            random.shuffle(sim_winners)
-            for player, score in simulation.items():
-                if player in sim_winners:
-                    ordinal = sim_winners.index(player) + 1
-                elif player in sim_order:
-                    ordinal = sim_order.index(player) + 1
-                finishes[player].update([ordinal])
-
-        info(f'Simulation Winners = {sim_winners}')
+            ordinal = rank.index(player) + 1
+            finishes[player].update([ordinal])
 
         if (iteration + 1) % 500 == 0: print('.', end='', flush=True)
 
