@@ -255,12 +255,13 @@ if __name__ == '__main__':
                 ordinal = sim_order.index(player) + 1
                 finishes[player].update([ordinal])
         else:
+            random.shuffle(sim_winners)
             for player, score in simulation.items():
                 if player in sim_winners:
-                    finishes[player].update(['Tie'])
-                else:
+                    ordinal = sim_winners.index(player) + 1
+                elif player in sim_order:
                     ordinal = sim_order.index(player) + 1
-                    finishes[player].update([ordinal])
+                finishes[player].update([ordinal])
 
         info(f'Simulation Winners = {sim_winners}')
 
@@ -275,7 +276,7 @@ if __name__ == '__main__':
 
     print()
 
-    fieldnames = ['Player', 'Tie']
+    fieldnames = ['Player']
     fieldnames += list(range(1, 17))
     writer = csv.DictWriter(open('finishes.csv', 'w'), fieldnames=fieldnames)
     writer.writeheader()
