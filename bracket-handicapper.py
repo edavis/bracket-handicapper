@@ -209,6 +209,7 @@ if __name__ == '__main__':
     iterations = args.iterations
 
     winners = Counter()
+    finishes = {}
 
     # Make sure everybody is displayed
     reader = csv.DictReader(open('brackets.csv'))
@@ -216,6 +217,7 @@ if __name__ == '__main__':
     row.pop('Region')
     row.pop('Game')
     winners.update({player: 0 for player in row.keys()})
+    finishes.update({player: Counter() for player in row.keys()})
 
     # ---------------------------------------------------------------------------
     # Downloaded from <https://projects.fivethirtyeight.com/march-madness-api/2021/fivethirtyeight_ncaa_forecasts.csv>
@@ -242,10 +244,23 @@ if __name__ == '__main__':
         top_score = max(simulation.values())
         info(f'Top score = {top_score}')
 
+        sim_order = [player for player, score in sorted(simulation.items(), key=itemgetter(1), reverse=True)]
         sim_winners = []
         for player, score in simulation.items():
             if score == top_score:
                 sim_winners.append(player)
+
+        if len(sim_winners) == 1:
+            for player, score in simulation.items():
+                ordinal = sim_order.index(player) + 1
+                finishes[player].update([ordinal])
+        else:
+            for player, score in simulation.items():
+                if player in sim_winners:
+                    finishes[player].update(['Tie'])
+                else:
+                    ordinal = sim_order.index(player) + 1
+                    finishes[player].update([ordinal])
 
         info(f'Simulation Winners = {sim_winners}')
 
@@ -260,11 +275,12 @@ if __name__ == '__main__':
 
     print()
 
-    print(f'Final Winners = {winners}')
-    for key in sorted(winners, key=winners.get, reverse=True):
-        p = winners[key] / iterations
-        if p < 0.0001:
-            print(f'{key.rjust(7)}: < 0.01%')
-        else:
-            odds = round((1/p)-1)
-            print(f'{key.rjust(7)}: {odds} - 1 ({round(p*100, 2)}%)')
+    fieldnames = ['Player', 'Tie']
+    fieldnames += list(range(1, 17))
+    writer = csv.DictWriter(open('finishes.csv', 'w'), fieldnames=fieldnames)
+    writer.writeheader()
+    for player, counts in finishes.items():
+        fields = {k: v / iterations for k, v in dict(counts).items()}
+        obj = {'Player': player}
+        obj.update(fields)
+        writer.writerow(obj)
