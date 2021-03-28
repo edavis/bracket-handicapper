@@ -11,7 +11,18 @@ from collections import (
 
 random.seed(2020-21)
 
-LATEST_RESULTS = '2021-03-22'
+# 3/18 -> R68 finished
+# 3/19 -> D1 R64 finished
+# 3/20 -> D2 R64 finished
+# 3/21 -> D1 R32 finished
+# 3/22 -> D2 R32 finished
+
+# 3/27 -> D1 S16 finished
+# 3/28 -> D2 S16 finished
+# 3/29 -> D1 E8 finished
+# 3/30 -> D2 E8 finished
+
+LATEST_RESULTS = '2021-03-27'
 
 def info(s=''):
     if DEBUG: print(s)
