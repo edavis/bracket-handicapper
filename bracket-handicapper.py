@@ -260,7 +260,7 @@ if __name__ == '__main__':
     print()
 
     fieldnames = ['Player']
-    fieldnames += list(range(1, 17))
+    fieldnames += list(range(1, len(finishes)+1))
     writer = csv.DictWriter(open('finishes.csv', 'w'), fieldnames=fieldnames)
     writer.writeheader()
     for player, counts in finishes.items():
