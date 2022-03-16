@@ -7,7 +7,7 @@ NCAA March Madness bracket pool using 538 team ratings.
 Preparation
 -----------
 
-1) Download https://projects.fivethirtyeight.com/march-madness-api/2021/fivethirtyeight_ncaa_forecasts.csv
+1) Download https://projects.fivethirtyeight.com/march-madness-api/2022/fivethirtyeight_ncaa_forecasts.csv
 2) Create brackets.csv (Format should be self-explanatory. Keep the first two columns as-is.)
 
 License

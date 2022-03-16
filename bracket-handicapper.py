@@ -11,16 +11,14 @@ from collections import (
 
 random.seed(2020-21)
 
-# 3/18 -> R68 finished
-# 3/19 -> D1 R64 finished
-# 3/20 -> D2 R64 finished
-# 3/21 -> D1 R32 finished
-# 3/22 -> D2 R32 finished
-
-# 3/27 -> D1 S16 finished
-# 3/28 -> D2 S16 finished
-# 3/29 -> D1 E8 finished
-# 3/30 -> D2 E8 finished
+# https://www.ncaa.com/news/basketball-men/article/2022-march-madness-schedule
+# 3/15-16 -> R68
+# 3/17-18 -> R64
+# 3/19-20 -> R32
+# 3/24-25 -> S16
+# 3/26-27 -> E8
+# 4/2     -> F4
+# 4/4     -> NC
 
 def info(s=''):
     if DEBUG: print(s)
@@ -230,7 +228,7 @@ if __name__ == '__main__':
     finishes.update({player: Counter() for player in row.keys()})
 
     # ---------------------------------------------------------------------------
-    # Downloaded from <https://projects.fivethirtyeight.com/march-madness-api/2021/fivethirtyeight_ncaa_forecasts.csv>
+    # Downloaded from <https://projects.fivethirtyeight.com/march-madness-api/2022/fivethirtyeight_ncaa_forecasts.csv>
     reader = csv.DictReader(open('fivethirtyeight_ncaa_forecasts.csv'))
     teams = {
         'West': {},
@@ -241,7 +239,7 @@ if __name__ == '__main__':
 
     for row in reader:
         if row['gender'] != 'mens' or row['forecast_date'] != LATEST_RESULTS: continue # only use the latest mens
-        if row['playin_flag'] == '1' and row['rd1_win'] == '0.0': continue # team out before Friday
+        if row['playin_flag'] == '1' and row['rd1_win'] == '0.0': continue # team out before R64
 
         region = row['team_region']
         seed = int(row['team_seed'].rstrip('ab'))
