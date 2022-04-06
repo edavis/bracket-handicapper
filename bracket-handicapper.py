@@ -265,7 +265,8 @@ if __name__ == '__main__':
     writer = csv.DictWriter(open(args.output, 'w'), fieldnames=fieldnames)
     writer.writeheader()
     for player, counts in finishes.items():
-        fields = {k: v / iterations for k, v in dict(counts).items()}
+        fields = {n: 0 for n in range(1, len(finishes)+1)}
+        fields.update({k: v / iterations for k, v in dict(counts).items()})
         obj = {'Player': player}
         obj.update(fields)
         writer.writerow(obj)
