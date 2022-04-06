@@ -212,6 +212,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true')
     parser.add_argument('-n', '--iterations', default=10_000, type=int)
+    parser.add_argument('-o', '--output', default='finishes.csv')
     parser.add_argument('latest')
     args = parser.parse_args()
 
@@ -261,7 +262,7 @@ if __name__ == '__main__':
 
     fieldnames = ['Player']
     fieldnames += list(range(1, len(finishes)+1))
-    writer = csv.DictWriter(open('finishes.csv', 'w'), fieldnames=fieldnames)
+    writer = csv.DictWriter(open(args.output, 'w'), fieldnames=fieldnames)
     writer.writeheader()
     for player, counts in finishes.items():
         fields = {k: v / iterations for k, v in dict(counts).items()}
